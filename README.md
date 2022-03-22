@@ -1,2 +1,2 @@
 # swiftcloud
-The #1 App for Swifties!
+The #1 App for Taylor Swifties!
