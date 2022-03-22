@@ -1,5 +1,6 @@
 import express from 'express';
 import { GoogleSheetsClient } from './client/google-sheets.client';
+import { SongFilter } from './model/song-filter.model';
 import { GoogleSheetsService } from './services/google-sheets.service';
 const app = express();
 const port = 3000;
@@ -8,7 +9,16 @@ const sheetsClient = new GoogleSheetsClient(process.env.GOOGLE_SHEETS_SHEET_ID);
 const sheetsService = new GoogleSheetsService(sheetsClient);
 
 app.get('/songs', async (request, response) => {
-    response.send(await sheetsService.getRows());
+    const params = request.query;
+    const filter: SongFilter = {
+        title: params['title'] as string,
+        artist: params['artist'] as string,
+        writer: params['writer'] as string,
+        album: params['album'] as string,
+        year: parseInt(params['year'] as string)
+    };
+
+    response.send(await sheetsService.getSongs(filter));
 });
 
 app.listen(port, () => {
