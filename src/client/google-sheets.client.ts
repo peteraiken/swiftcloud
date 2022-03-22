@@ -1,10 +1,12 @@
-import { google } from 'googleapis';
+import { google, sheets_v4 } from 'googleapis';
 
 export class GoogleSheetsClient {
     private readonly sheet = google.sheets('v4');
     private readonly sheetId: string;
     
-    constructor(sheetId: string) {
+    constructor();
+    constructor(sheetId: string);
+    constructor(sheetId?: string) {
         this.sheetId = sheetId;
     }
 
@@ -16,7 +18,7 @@ export class GoogleSheetsClient {
      * @param dimension - The major dimension to indicate return in either rows or columns.
      * @returns Response of GET query request from Google Sheets API.
      */
-    async get(tab: string, range: string, dimension?: 'ROWS' | 'COLUMNS') {
+    async get(tab: string, range: string, dimension?: 'ROWS' | 'COLUMNS'): Promise<Array<Array<string>>> {
         const request = this.createRequest(tab, range, dimension);
         const response = await this.sheet.spreadsheets.values.get(request);
 
@@ -29,13 +31,14 @@ export class GoogleSheetsClient {
      * @param tab - The tab in the spreadsheet to target.
      * @param range - The range to query.
      * @param dimension - The major dimension to indicate return in either rows or columns. Defaults to ROWS.
-     * @returns Compatibile Google Sheets API request object.
+     * @returns Compatible Google Sheets API request object.
      */
-    private createRequest(tab: string, range: string, dimension = 'ROWS') {
+    private createRequest(tab: string, range: string, dimension = 'ROWS'): sheets_v4.Params$Resource$Spreadsheets$Values$Get {
         return {
-            spreadSheetId: this.sheetId,
+            spreadsheetId: this.sheetId,
             range: `${tab}!${range}`,
-            majorDimension: dimension
+            majorDimension: dimension,
+            key: process.env.GOOGLE_SHEETS_API_KEY
         }
     }
 }
