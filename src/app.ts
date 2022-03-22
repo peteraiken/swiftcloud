@@ -7,7 +7,7 @@ const port = 3000;
 const sheetsClient = new GoogleSheetsClient(process.env.GOOGLE_SHEETS_SHEET_ID);
 const sheetsService = new GoogleSheetsService(sheetsClient);
 
-app.get('/', async (request, response) => {
+app.get('/songs', async (request, response) => {
     response.send(await sheetsService.getRows());
 });
 
