@@ -2,8 +2,10 @@
   "name": "swiftcloud",
   "version": "1.0.0",
   "description": "The #1 App for Taylor Swifties!",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
+    "build": "tsc",
+    "start": "tsc && node dist/app.js",
     "test": "test"
   },
   "repository": {
