@@ -15,19 +15,46 @@ class GoogleSheetsService {
     constructor(googleSheetsClient) {
         this.sheetsClient = googleSheetsClient;
     }
-    getRows() {
+    /**
+     * Returns array of valid Song objects as retrieved from Google Sheets.
+     *
+     * @param filter - Any filters to apply against the song list.
+     * @returns Array of Song objects.
+     */
+    getSongs(filter) {
         return __awaiter(this, void 0, void 0, function* () {
             const sheet = 'Sheet1';
             const range = 'A1:H173';
             const rows = yield this.sheetsClient.get(sheet, range);
             const headerRow = rows.shift();
             const songs = [];
+            // For each row, convert into a Song.
             rows.forEach((row) => {
                 const song = new song_model_1.Song(headerRow, row);
                 songs.push(song);
             });
-            return songs;
+            return this.applyFilter(songs, filter);
         });
+    }
+    /**
+     * Apply provided filters against returned song list.
+     *
+     * @param results - The list of songs against which to apply filters.
+     * @param filter - The filters to apply.
+     * @returns Filtered list of songs.
+     */
+    applyFilter(results, filter) {
+        if (filter.title)
+            results = results.filter(song => song.title === filter.title);
+        if (filter.artist)
+            results = results.filter(song => song.artists.includes(filter.artist));
+        if (filter.writer)
+            results = results.filter(song => song.writers.includes(filter.writer));
+        if (filter.album)
+            results = results.filter(song => song.album === filter.album);
+        if (filter.year)
+            results = results.filter(song => song.year === filter.year);
+        return results;
     }
 }
 exports.GoogleSheetsService = GoogleSheetsService;

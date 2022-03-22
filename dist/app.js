@@ -19,8 +19,16 @@ const app = (0, express_1.default)();
 const port = 3000;
 const sheetsClient = new google_sheets_client_1.GoogleSheetsClient(process.env.GOOGLE_SHEETS_SHEET_ID);
 const sheetsService = new google_sheets_service_1.GoogleSheetsService(sheetsClient);
-app.get('/', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    response.send(yield sheetsService.getRows());
+app.get('/songs', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const params = request.query;
+    const filter = {
+        title: params['title'],
+        artist: params['artist'],
+        writer: params['writer'],
+        album: params['album'],
+        year: parseInt(params['year'])
+    };
+    response.send(yield sheetsService.getSongs(filter));
 }));
 app.listen(port, () => {
     return console.log(`App is running at http://localhost:${port}`);
