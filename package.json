@@ -1,0 +1,19 @@
+{
+  "name": "swiftcloud",
+  "version": "1.0.0",
+  "description": "The #1 App for Taylor Swifties!",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peteraiken/swiftcloud.git"
+  },
+  "author": "Peter Aiken",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/peteraiken/swiftcloud/issues"
+  },
+  "homepage": "https://github.com/peteraiken/swiftcloud#readme"
+}
