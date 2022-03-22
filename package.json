@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/peteraiken/swiftcloud/issues"
   },
-  "homepage": "https://github.com/peteraiken/swiftcloud#readme"
+  "homepage": "https://github.com/peteraiken/swiftcloud#readme",
+  "devDependencies": {
+    "typescript": "^4.6.2"
+  }
 }
