@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node dist/app.js",
+    "lint": "eslint . --ext .ts",
     "test": "test"
   },
   "repository": {
