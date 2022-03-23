@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "tsc && node dist/app.js",
     "lint": "eslint . --ext .ts",
-    "test": "test"
+    "test": "echo 'tests not implemented'"
   },
   "repository": {
     "type": "git",
