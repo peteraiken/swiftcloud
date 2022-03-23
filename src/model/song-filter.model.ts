@@ -4,6 +4,8 @@ export interface SongFilter {
     writer?: Array<string>;
     album?: string;
     year?: number;
+    startYear?: number;
+    endYear?: number;
     minTotalPlays?: number;
     maxTotalPlays?: number;
 }
