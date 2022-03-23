@@ -14,10 +14,12 @@ app.get('/songs', async (request, response) => {
     const params = request.query;
     const filter: SongFilter = {
         title: params['title'] as string,
-        artist: params['artist'] as string,
-        writer: params['writer'] as string,
+        artist: (params['artist'] as string)?.split(','),
+        writer: (params['writer'] as string)?.split(','),
         album: params['album'] as string,
-        year: parseInt(params['year'] as string)
+        year: parseInt(params['year'] as string),
+        minTotalPlays: parseInt(params['minPlays'] as string),
+        maxTotalPlays: parseInt(params['maxPlays'] as string)
     };
 
     response.send(await sheetsService.getSongs(filter));

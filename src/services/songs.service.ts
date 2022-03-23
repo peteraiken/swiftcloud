@@ -12,7 +12,7 @@ export class GoogleSheetsService {
     constructor(googleSheetsClient?: GoogleSheetsClient, googleSheetsParserService?: GoogleSheetsParserService) {
         this.sheetsClient = googleSheetsClient;
         this.parserService = googleSheetsParserService;
-    }    
+    }
 
     /**
      * Returns array of valid Song objects as retrieved from Google Sheets.
@@ -20,13 +20,13 @@ export class GoogleSheetsService {
      * @param filter - Any filters to apply against the song list.
      * @returns Array of Song objects.
      */
-    async getSongs(filter: SongFilter): Promise<Array<Song>> {
+    async getSongs(filter?: SongFilter, sort?: (a: Song, b: Song) => number): Promise<Array<Song>> {
         const sheet = 'Sheet1';
-        const range = 'A1:H173';
+        const range = 'A:H';
         const rows = await this.sheetsClient.get(sheet, range);
 
-        const results = this.parserService.parseRowsToObject(rows, Song);
-        return this.applyFilter(results, filter);
+        const results = this.parserService.parseRowsToObject(rows, Song);        
+        return this.applyPredicates(results, filter, sort);
     }
 
     /**
@@ -36,13 +36,15 @@ export class GoogleSheetsService {
      * @param filter - The filters to apply.
      * @returns Filtered list of songs.
      */
-    private applyFilter(results: Array<Song>, filter: SongFilter): Array<Song> {
+    private applyPredicates(results: Array<Song>, filter: SongFilter, sort: (a: Song, b: Song) => number): Array<Song> {
         if (filter.title) results = results.filter(song => song.title === filter.title);
-        if (filter.artist) results = results.filter(song => song.artists.includes(filter.artist));
-        if (filter.writer) results = results.filter(song => song.writers.includes(filter.writer));
+        if (filter.artist) results = results.filter(song => song.artists.some(artist => filter.artist.includes(artist)));
+        if (filter.writer) results = results.filter(song => song.writers.some(writer => filter.writer.includes(writer)));
         if (filter.album) results = results.filter(song => song.album === filter.album);
         if (filter.year) results = results.filter(song => song.year === filter.year);
+        if (filter.minTotalPlays) results = results.filter(song => song.plays.totalPlays >= filter.minTotalPlays);
+        if (filter.maxTotalPlays) results = results.filter(song => song.plays.totalPlays <= filter.maxTotalPlays);
 
-        return results;
+        return results.sort(sort);
     }
 }

@@ -24,11 +24,10 @@ export default class SongBuilder extends BaseBuilder<Song> {
         const year = parseInt(this.getValueByColumnName(header, row, 'Year')) || null;
 
         // Splitting values into numeric plays-per-month.
-        const plays: MonthlyPlays = {
-            june: parseInt(this.getValueByColumnName(header, row, 'Plays - June')) || null,
-            july: parseInt(this.getValueByColumnName(header, row, 'Plays - July')) || null,
-            august: parseInt(this.getValueByColumnName(header, row, 'Plays - August')) || null
-        }
+        const plays = new MonthlyPlays();
+        plays.june = parseInt(this.getValueByColumnName(header, row, 'Plays - June')) || null;
+        plays.july = parseInt(this.getValueByColumnName(header, row, 'Plays - July')) || null;
+        plays.august = parseInt(this.getValueByColumnName(header, row, 'Plays - August')) || null;
 
         return {
             title: title,
