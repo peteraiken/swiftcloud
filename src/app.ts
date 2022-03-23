@@ -21,17 +21,17 @@ app.get('/songs', async (request, response) => {
     response.send(await sheetsService.getSongs(filter));
 });
 
-app.get('/songs/year/start/:start/end/:end', async (request, response) => {
+app.get('/summary/year/start/:start/end/:end', async (request, response) => {
     const start = parseInt(request.params.start);
     const end = parseInt(request.params.end);
     response.send(await sheetsService.getSummaryByDateRange(start, end));
 });
 
-app.get('/songs/collabs/artists', async (request, response) => {
+app.get('/summary/collabs/artists', async (request, response) => {
     response.send(await sheetsService.getSummaryByMultipleArtists());
 });
 
-app.get('/songs/collabs/writers', async (request, response) => {
+app.get('/summary/collabs/writers', async (request, response) => {
     response.send(await sheetsService.getSummaryByMultipleWriters());
 });
 
