@@ -48,11 +48,12 @@ export class SongService {
      * @param endYear - The end of the year range.
      * @returns List of song titles for songs released in date range.
      */
-    async getSongListByDateRange(startYear: number, endYear: number): Promise<Array<string>> {
+    async getSummaryByDateRange(startYear: number, endYear: number): Promise<Array<string>> {
         const filter = { startYear: startYear, endYear: endYear};
         const sort = (a: Song, b: Song) => a.year - b.year;
         const results = await this.getSongs(filter, sort);
-        return results.map(song => song.title);
+        return results
+            .map(song => this.formatSummaryOutput(song));
     }
 
     /**
@@ -60,9 +61,11 @@ export class SongService {
      * 
      * @returns List of song titles for songs with multiple artists.
      */
-    async getSongListWithMultipleArtists(): Promise<Array<string>> {
+    async getSummaryByMultipleArtists(): Promise<Array<string>> {
         const results = await this.getSongs();
-        return results.filter((song) => song.artists.length > 1).map(song => song.title);
+        return results
+            .filter((song) => song.artists.length > 1)
+            .map(song => this.formatSummaryOutput(song));
     }
 
     /**
@@ -70,9 +73,11 @@ export class SongService {
      * 
      * @returns List of song titles for songs with multiple writers.
      */
-     async getSongListWithMultipleWriters(): Promise<Array<string>> {
+     async getSummaryByMultipleWriters(): Promise<Array<string>> {
         const results = await this.getSongs();
-        return results.filter((song) => song.writers.length > 1).map(song => song.title);
+        return results
+            .filter((song) => song.writers.length > 1)
+            .map(song => this.formatSummaryOutput(song));
     }
 
     //#region Supporting Methods
@@ -112,6 +117,17 @@ export class SongService {
         if (sort) return results.sort(sort);
         if (limit) return results.slice(0, limit);
         return results;
+    }
+
+    /**
+     * Returns formatted string output summarising a song's details (title, artist, release year).
+     * Formats to `title - album (year)`
+     * 
+     * @param song - The song from which to extract relevant details.
+     * @returns String output of song summary.
+     */
+    private formatSummaryOutput(song: Song): string {
+        return `${song.title} - ${song.artists.join(', ')} (${song.year})`;
     }
 
     //#endregion Supporting Methods

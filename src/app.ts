@@ -24,15 +24,15 @@ app.get('/songs', async (request, response) => {
 app.get('/songs/year/start/:start/end/:end', async (request, response) => {
     const start = parseInt(request.params.start);
     const end = parseInt(request.params.end);
-    response.send(await sheetsService.getSongListByDateRange(start, end));
+    response.send(await sheetsService.getSummaryByDateRange(start, end));
 });
 
 app.get('/songs/collabs/artists', async (request, response) => {
-    response.send(await sheetsService.getSongListWithMultipleArtists());
+    response.send(await sheetsService.getSummaryByMultipleArtists());
 });
 
 app.get('/songs/collabs/writers', async (request, response) => {
-    response.send(await sheetsService.getSongListWithMultipleWriters());
+    response.send(await sheetsService.getSummaryByMultipleWriters());
 });
 
 /**
@@ -56,11 +56,3 @@ function buildFilters(params): SongFilter {
 }
 
 export const handler = serverless(app);
-
-// app.get('/songs/month/:month', async (request, response) => {
-//     response.send(await sheetsService.getSongsByMonth(request.query['month']));
-// });
-
-app.listen(port, () => {
-    return console.log(`App is running at http://localhost:${port}`);
-});
