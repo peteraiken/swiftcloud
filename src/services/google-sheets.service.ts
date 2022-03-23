@@ -1,15 +1,18 @@
 import { GoogleSheetsClient } from "../client/google-sheets.client";
 import { SongFilter } from "../model/song-filter.model";
 import { Song } from "../model/song.model";
+import { GoogleSheetsParserService } from "../parser/google-sheets-parser.service";
 
 export class GoogleSheetsService {
     private readonly sheetsClient: GoogleSheetsClient;
+    private readonly parserService: GoogleSheetsParserService;
 
     constructor();
-    constructor(googleSheetsClient: GoogleSheetsClient);
-    constructor(googleSheetsClient?: GoogleSheetsClient) {
+    constructor(googleSheetsClient: GoogleSheetsClient, googleSheetsParserService: GoogleSheetsParserService);
+    constructor(googleSheetsClient?: GoogleSheetsClient, googleSheetsParserService?: GoogleSheetsParserService) {
         this.sheetsClient = googleSheetsClient;
-    }
+        this.parserService = googleSheetsParserService;
+    }    
 
     /**
      * Returns array of valid Song objects as retrieved from Google Sheets.
@@ -21,17 +24,9 @@ export class GoogleSheetsService {
         const sheet = 'Sheet1';
         const range = 'A1:H173';
         const rows = await this.sheetsClient.get(sheet, range);
-        
-        const headerRow = rows.shift();
-        const songs: Array<Song> = [];
 
-        // For each row, convert into a Song.
-        rows.forEach((row) => {
-            const song = new Song(headerRow, row);
-            songs.push(song);
-        });
-
-        return this.applyFilter(songs, filter);
+        const results = this.parserService.parseRowsToObject(rows, Song);
+        return this.applyFilter(results, filter);
     }
 
     /**
