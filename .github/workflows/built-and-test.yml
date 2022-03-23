@@ -3,31 +3,45 @@ on:
   push:
     branches: [master]
 jobs:
-  deploy_source:
-    name: build and deploy lambda
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: npm ci
-      - name: Lint
-        run: npm run lint
-      - name: Test
-        run: npm run test
-      - name: Build
-        run: npm run build
-      - name: Serverless deploy
-        uses: serverless/github-action@v1.53.0
+      - run: npm ci
+      - name: serverless deploy
+        uses: serverless/github-action@v3
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: eu-west-1
-          function_name: swiftcloud-dev-api
-          zip_file: bundle.zip
+          args: deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # - uses: actions/checkout@v1
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+      # - name: Install dependencies
+      #   run: npm ci
+      # - name: Lint
+      #   run: npm run lint
+      # - name: Test
+      #   run: npm run test
+      # - name: Build
+      #   run: npm run build
+      # - name: Serverless deploy
+      #   uses: serverless/github-action@v1.53.0
+      #   with:
+      #     aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws_region: eu-west-1
+      #     function_name: swiftcloud-dev-api
+      #     zip_file: bundle.zip
