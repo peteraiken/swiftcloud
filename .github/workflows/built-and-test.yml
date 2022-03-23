@@ -20,31 +20,13 @@ jobs:
           npm run build --if-present
         env:
           CI: true
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test
       - name: Installing Serverless Framework
         run: npm install -g serverless
       - name: Serverless AWS Authentication
         run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Deploy to Lambda
         run: sls deploy
-
-      # - uses: actions/checkout@v1
-      # - name: Use Node.js ${{ matrix.node-version }}
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
-      # - name: Install dependencies
-      #   run: npm ci
-      # - name: Lint
-      #   run: npm run lint
-      # - name: Test
-      #   run: npm run test
-      # - name: Build
-      #   run: npm run build
-      # - name: Serverless deploy
-      #   uses: serverless/github-action@v1.53.0
-      #   with:
-      #     aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws_region: eu-west-1
-      #     function_name: swiftcloud-dev-api
-      #     zip_file: bundle.zip
