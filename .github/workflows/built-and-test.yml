@@ -21,6 +21,7 @@ jobs:
         env:
           CI: true
       - name: Serverless AWS Authentication
+        run: npm install -g serverless
         run: serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: serverless deploy
         uses: serverless/github-action@v3
