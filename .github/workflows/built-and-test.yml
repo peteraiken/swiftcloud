@@ -20,9 +20,11 @@ jobs:
           npm run build --if-present
         env:
           CI: true
+      - name: Installing Serverless Framework
+        run: npm install -g serverless
       - name: Serverless AWS Authentication
-        run: npm install -g serverless && serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: serverless deploy
+        run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: sls deploy
         uses: serverless/github-action@v3
         with:
           args: deploy
