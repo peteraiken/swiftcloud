@@ -33,17 +33,16 @@ export class SongService {
         const songs = await this.getSongs();
     }
 
-    getSongsByYear // { 2001: [...], 2020: [...] }
-    getSongsByMonthyListen // { june: [ { 'Love Story': 124 } ]}
-
     /**
      * Apply provided filters against returned song list.
      * 
      * @param results - The list of songs against which to apply filters.
      * @param filter - The filters to apply.
+     * @param sort - The sort predicate to apply.
      * @returns Filtered list of songs.
      */
-    private applyPredicates(results: Array<Song>, filter: SongFilter, sort: (a: Song, b: Song) => number): Array<Song> {
+    private applyPredicates(results: Array<Song>, filter?: SongFilter, sort?: (a: Song, b: Song) => number): Array<Song> {
+        if (filter) {
         if (filter.title) results = results.filter(song => song.title === filter.title);
         if (filter.artist) results = results.filter(song => song.artists.some(artist => filter.artist.includes(artist)));
         if (filter.writer) results = results.filter(song => song.writers.some(writer => filter.writer.includes(writer)));
@@ -51,7 +50,9 @@ export class SongService {
         if (filter.year) results = results.filter(song => song.year === filter.year);
         if (filter.minTotalPlays) results = results.filter(song => song.plays.totalPlays >= filter.minTotalPlays);
         if (filter.maxTotalPlays) results = results.filter(song => song.plays.totalPlays <= filter.maxTotalPlays);
+        }
 
-        return results.sort(sort);
+        if (sort) return results.sort(sort);
+        return results;
     }
 }
