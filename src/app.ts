@@ -1,4 +1,5 @@
 import express from 'express';
+import serverless from 'serverless-http';
 import { GoogleSheetsClient } from './client/google-sheets.client';
 import { SongFilter } from './model/song-filter.model';
 import { GoogleSheetsParserService } from './parser/google-sheets-parser.service';
@@ -25,6 +26,12 @@ app.get('/songs', async (request, response) => {
     response.send(await sheetsService.getSongs(filter));
 });
 
-app.listen(port, () => {
-    return console.log(`App is running at http://localhost:${port}`);
-});
+export const handler = serverless(app);
+
+// app.get('/songs/month/:month', async (request, response) => {
+//     response.send(await sheetsService.getSongsByMonth(request.query['month']));
+// });
+
+// app.listen(port, () => {
+//     return console.log(`App is running at http://localhost:${port}`);
+// });
