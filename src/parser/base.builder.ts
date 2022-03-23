@@ -1,5 +1,6 @@
 export default abstract class BaseBuilder<T> {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     initialise(header: Array<string>, row: Array<string>): T {
         throw new Error(`Class Builder not implemented.`);
     }
