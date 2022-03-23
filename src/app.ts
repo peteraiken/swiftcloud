@@ -2,7 +2,7 @@ import express from 'express';
 import { GoogleSheetsClient } from './client/google-sheets.client';
 import { SongFilter } from './model/song-filter.model';
 import { GoogleSheetsParserService } from './parser/google-sheets-parser.service';
-import { GoogleSheetsService } from './services/google-sheets.service';
+import { GoogleSheetsService } from './services/songs.service';
 const app = express();
 const port = 3000;
 
