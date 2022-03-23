@@ -2,13 +2,13 @@ import express from 'express';
 import { GoogleSheetsClient } from './client/google-sheets.client';
 import { SongFilter } from './model/song-filter.model';
 import { GoogleSheetsParserService } from './parser/google-sheets-parser.service';
-import { GoogleSheetsService } from './services/songs.service';
+import { SongService } from './services/song.service';
 const app = express();
 const port = 3000;
 
 const sheetsClient = new GoogleSheetsClient(process.env.GOOGLE_SHEETS_SHEET_ID);
 const parserService = new GoogleSheetsParserService();
-const sheetsService = new GoogleSheetsService(sheetsClient, parserService);
+const sheetsService = new SongService(sheetsClient, parserService);
 
 app.get('/songs', async (request, response) => {
     const params = request.query;

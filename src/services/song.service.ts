@@ -3,9 +3,11 @@ import { SongFilter } from "../model/song-filter.model";
 import { Song } from "../model/song.model";
 import { GoogleSheetsParserService } from "../parser/google-sheets-parser.service";
 
-export class GoogleSheetsService {
+export class SongService {
     private readonly sheetsClient: GoogleSheetsClient;
     private readonly parserService: GoogleSheetsParserService;
+    private readonly mainSheet = 'Sheet1';
+    private readonly completeRange = 'A:H';
 
     constructor();
     constructor(googleSheetsClient: GoogleSheetsClient, googleSheetsParserService: GoogleSheetsParserService);
@@ -18,16 +20,21 @@ export class GoogleSheetsService {
      * Returns array of valid Song objects as retrieved from Google Sheets.
      * 
      * @param filter - Any filters to apply against the song list.
+     * @param sort - Any sorting predicate to apply to the array of songs.
      * @returns Array of Song objects.
      */
     async getSongs(filter?: SongFilter, sort?: (a: Song, b: Song) => number): Promise<Array<Song>> {
-        const sheet = 'Sheet1';
-        const range = 'A:H';
-        const rows = await this.sheetsClient.get(sheet, range);
-
+        const rows = await this.sheetsClient.get(this.mainSheet, this.completeRange);
         const results = this.parserService.parseRowsToObject(rows, Song);        
         return this.applyPredicates(results, filter, sort);
     }
+
+    async getSongsByMonth(month: string) {
+        const songs = await this.getSongs();
+    }
+
+    getSongsByYear // { 2001: [...], 2020: [...] }
+    getSongsByMonthyListen // { june: [ { 'Love Story': 124 } ]}
 
     /**
      * Apply provided filters against returned song list.
