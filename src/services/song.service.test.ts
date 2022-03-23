@@ -132,7 +132,7 @@ describe('getSong', () => {
         const response = await service.getSong(filter);
 
         // Assert
-        expect(response.title).toEqual('Song 2');
+        expect(response.title).toEqual('Song 1');
 
         expect(parseRowsSpy).toHaveBeenCalled();
     });
@@ -143,18 +143,17 @@ describe('getSongTitlesByDateRange', () => {
         jest.clearAllMocks();
     });
 
-    test('With multiple songs matching filters and sort, just return first in sorted list', async () => {
+    test('Return list of string song summary for songs released between date range', async () => {
         // Arrange
-        const filter: SongFilter = {
-            artist: ['Artist A']
-        };
         const parseRowsSpy = jest.spyOn(parserService, 'parseRowsToObject').mockReturnValue(songs);
 
         // Act
-        const response = await service.getSong(filter);
+        const response = await service.getSummaryByDateRange(2016, 2018);
 
         // Assert
-        expect(response.title).toEqual('Song 2');
+        expect(response.length).toEqual(2);
+        expect(response[0]).toEqual(`Song 2 - Artist A, Artist B (2016)`);
+        expect(response[1]).toEqual(`Song 3 - Artist B (2018)`);
 
         expect(parseRowsSpy).toHaveBeenCalled();
     });
