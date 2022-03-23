@@ -56,3 +56,9 @@ function buildFilters(params): SongFilter {
 }
 
 export const handler = serverless(app);
+
+if (process.env.environment === 'LOCAL') {
+    app.listen(port, () => {
+        return console.log(`App is running at http://localhost:${port}`);
+    });
+}
