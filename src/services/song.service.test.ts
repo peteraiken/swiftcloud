@@ -115,3 +115,47 @@ describe('getSongs', () => {
         expect(parseRowsSpy).toHaveBeenCalled();
     });
 });
+
+describe('getSong', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('With multiple songs matching filters and sort, just return first in sorted list', async () => {
+        // Arrange
+        const filter: SongFilter = {
+            artist: ['Artist A']
+        };
+        const parseRowsSpy = jest.spyOn(parserService, 'parseRowsToObject').mockReturnValue(songs);
+
+        // Act
+        const response = await service.getSong(filter);
+
+        // Assert
+        expect(response.title).toEqual('Song 2');
+
+        expect(parseRowsSpy).toHaveBeenCalled();
+    });
+});
+
+describe('getSongTitlesByDateRange', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('With multiple songs matching filters and sort, just return first in sorted list', async () => {
+        // Arrange
+        const filter: SongFilter = {
+            artist: ['Artist A']
+        };
+        const parseRowsSpy = jest.spyOn(parserService, 'parseRowsToObject').mockReturnValue(songs);
+
+        // Act
+        const response = await service.getSong(filter);
+
+        // Assert
+        expect(response.title).toEqual('Song 2');
+
+        expect(parseRowsSpy).toHaveBeenCalled();
+    });
+});
