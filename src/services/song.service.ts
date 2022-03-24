@@ -83,16 +83,25 @@ export class SongService {
     /**
      * Sort all songs by plays during the month provided. If month is not provided, sort by total plays.
      * 
-     * @param month - The month during which to find the most played songs.
+     * @param months - The months across which to find the most played songs.
      * @returns Array of Song objects.
      */
-    async getTopSongs(month?: string): Promise<Array<Song>> {
+    async getTopSongs(months?: Array<string>): Promise<Array<Song>> {
         const results = await this.getSongs();
 
-        if (month) {
-            return results.sort((a: Song, b: Song) =>
-                b.plays[month] - a.plays[month]
-            );
+        if (months && months.length > 0) {
+            // Sort in descending order the most played songs across all the months provided.
+            return results.sort((a: Song, b: Song) => {
+                let songAPlays = 0;
+                let songBPlays = 0;
+                months.forEach((month) => {
+                    // Loop through all requested months and calculate total plays per song for comparison.
+                    songAPlays += a.plays[month];
+                    songBPlays += b.plays[month];
+                });
+
+                return songBPlays - songAPlays;
+            });
         } else {
             return results.sort((a: Song, b: Song) =>
                 b.plays.totalPlays - a.plays.totalPlays

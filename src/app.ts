@@ -39,8 +39,9 @@ app.get('/songs/top', async (request, response) => {
     response.send(await sheetsService.getTopSongs());
 });
 
-app.get('/songs/top/month/:month', async (request, response) => {
-    response.send(await sheetsService.getTopSongs(request.params.month));
+app.get('/songs/top/months/:month', async (request, response) => {
+    const months = (request.params.month).split(',');
+    response.send(await sheetsService.getTopSongs(months));
 });
 
 /**
