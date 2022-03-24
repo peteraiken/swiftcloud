@@ -132,10 +132,10 @@ export class SongService {
      */
     private applyPredicates(results: Array<Song>, filter?: SongFilter, sort?: (a: Song, b: Song) => number, limit?: number): Array<Song> {
         if (filter) {
-            if (filter.title) results = results.filter(song => song.title === filter.title);
+            if (filter.title) results = results.filter(song => song.title.toLowerCase() === filter.title.toLowerCase());
             if (filter.artist) results = results.filter(song => song.artists.some(artist => filter.artist.includes(artist)));
             if (filter.writer) results = results.filter(song => song.writers.some(writer => filter.writer.includes(writer)));
-            if (filter.album) results = results.filter(song => song.album === filter.album);
+            if (filter.album) results = results.filter(song => song.album.toLowerCase() === filter.album.toLowerCase());
             if (filter.year) results = results.filter(song => song.year === filter.year);
             if (filter.startYear) results = results.filter(song => song.year >= filter.startYear);
             if (filter.endYear) results = results.filter(song => song.year <= filter.endYear);
