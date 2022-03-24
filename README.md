@@ -43,6 +43,6 @@ The base AWS URL for invoking the above endpoints is: `https://b57n0rlzdj.execut
 ### Commands
 The API can be used locally using the following commands:
 `npm start` runs the application locally at `http://localhost:3000` (this URL is also included in the Postman collection under the `local_url` variable).
-`npm run build` will build the application by translating the TypeScript code into JavaScript and storing the results in the `dist` folder.
+`npm run build` will build the application by transpiling the TypeScript code into JavaScript and storing the results in the `dist` folder.
 `npm run lint` will run linting rules against the codebase.
 `npm run test` will run all unit tests.
