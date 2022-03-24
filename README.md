@@ -46,3 +46,7 @@ The API can be used locally using the following commands:
 `npm run build` will build the application by transpiling the TypeScript code into JavaScript and storing the results in the `dist` folder.
 `npm run lint` will run linting rules against the codebase.
 `npm run test` will run all unit tests.
+
+#### Desired Improvements
+1. More flexible string-matching in filtering songs - for example, a partial substring check. If providing `artist=Taylor Swift` in the filter, be flexible enough to find songs that have `featuring Taylor Swift` in their artists list, rather than a direct string check.
+2. Related to above, the `artists` and `writers` filters are case-sensitive. Given more time I would have liked to make these case-insensitive.
