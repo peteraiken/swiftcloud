@@ -35,6 +35,14 @@ app.get('/summary/collabs/writers', async (request, response) => {
     response.send(await sheetsService.getSummaryByMultipleWriters());
 });
 
+app.get('/songs/top', async (request, response) => {
+    response.send(await sheetsService.getTopSongs());
+});
+
+app.get('/songs/top/month/:month', async (request, response) => {
+    response.send(await sheetsService.getTopSongs(request.params.month));
+});
+
 /**
  * Build valid song filter object from parameters.
  * 
@@ -57,7 +65,7 @@ function buildFilters(params): SongFilter {
 
 export const handler = serverless(app);
 
-if (process.env.environment === 'LOCAL') {
+if (process.env.ENVIRONMENT === 'local') {
     app.listen(port, () => {
         return console.log(`App is running at http://localhost:${port}`);
     });
