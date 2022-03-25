@@ -55,10 +55,13 @@ The base AWS URL for invoking the above endpoints is: `https://b57n0rlzdj.execut
 
 ### Commands
 The API can be used locally using the following commands:
-`npm start` runs the application locally at `http://localhost:3000` (this URL is also included in the Postman collection under the `local_url` variable).
+`npm start` runs the application locally at `http://localhost:3000` (this URL is also included in the Postman collection under the `local_url` variable). Note that this will quickly encounter an error, as it will not be able to read the spreadsheet and API keys required to interact with the Google Sheets API. See the Running Locally section below for instructions on running the application locally.
 `npm run build` will build the application by transpiling the TypeScript code into JavaScript and storing the results in the `dist` folder.
 `npm run lint` will run linting rules against the codebase.
 `npm run test` will run all unit tests.
+
+### Running Locally
+The API relies on two main environmental variables that have been stored against the Lambda in AWS rather than in the codebase for security reasons. I will provide a launch file that will run the application externally.
 
 ### Architecture
 This is a basic run-through of the flow of data through the API, from the endpoint, to Google Sheets, and back to the user. For this example, I'll be using the most complex of all the endpoints - `/songs`.
@@ -82,4 +85,6 @@ The `/songs/top` endpoints return the full song list but sorted by plays. The ba
 ## Desired Improvements
 1. More flexible string-matching in filtering songs - for example, a partial substring check. If providing `artist=Taylor Swift` in the filter, be flexible enough to find songs that have `featuring Taylor Swift` in their artists list, rather than a direct string check.
 2. Related to above, the `artists` and `writers` filters are case-sensitive. Given more time I would have liked to make these case-insensitive.
-3. More generally speaking - more error handling! I implemented controller-level general catches which logs the entire error stack, and returns the error message. 
+3. More generally speaking - more error handling! I implemented controller-level general catches which logs the entire error stack, and returns the error message.
+4. While storing the private API keys as an environmental variable is preferable to directly in a public codebase, it is still not ideally secure. I would have liked to utilise AWS Secrets Manager to store these tokens.
+5. Obviously, more unit and acceptance tests!
