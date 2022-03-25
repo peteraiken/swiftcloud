@@ -14,12 +14,40 @@ const optionalQueryArtistsValidator =
         .bail()
         .customSanitizer(ValidationUtility.sanitiseIntoArray);
 
+const optionalQueryMinArtistsValidator =
+    query('minArtists', '\'minArtists\' must be a valid whole number.')
+        .optional()
+        .isNumeric()
+        .bail()
+        .customSanitizer(ValidationUtility.sanitiseIntoNumber);
+
+const optionalQueryMaxArtistsValidator =
+    query('maxArtists', '\'maxArtists\' must be a valid whole number.')
+        .optional()
+        .isNumeric()
+        .bail()
+        .customSanitizer(ValidationUtility.sanitiseIntoNumber);
+
 const optionalQueryWritersValidator =
     query('writers', '\'writers\' must be a valid array (hint: separate each artist by comma).')
         .optional()
         .isString()
         .bail()
         .customSanitizer(ValidationUtility.sanitiseIntoArray);
+
+const optionalQueryMinWritersValidator =
+    query('minWriters', '\'minWriters\' must be a valid whole number.')
+        .optional()
+        .isNumeric()
+        .bail()
+        .customSanitizer(ValidationUtility.sanitiseIntoNumber);
+
+const optionalQueryMaxWritersValidator =
+    query('maxWriters', '\'maxWriters\' must be a valid whole number.')
+        .optional()
+        .isNumeric()
+        .bail()
+        .customSanitizer(ValidationUtility.sanitiseIntoNumber);
 
 const optionalQueryAlbumValidator =
     query('album', '\'album\' must be a valid string.')
@@ -65,7 +93,11 @@ const optionalQueryMaxTotalPlaysValidator =
 export const getSongsByFilterValidator = [
     optionalQueryTitleValidator,
     optionalQueryArtistsValidator,
+    optionalQueryMinArtistsValidator,
+    optionalQueryMaxArtistsValidator,
     optionalQueryWritersValidator,
+    optionalQueryMinWritersValidator,
+    optionalQueryMaxWritersValidator,
     optionalQueryAlbumValidator,
     optionalQueryYearValidator,
     optionalQueryStartYearValidator,

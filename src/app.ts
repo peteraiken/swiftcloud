@@ -109,8 +109,12 @@ app.use((error, request, response, next) => {
 function buildFilters(params): SongFilter {
     return {
         title: params['title'] as string,
-        artist: (params['artists'] as Array<string>),
-        writer: (params['writers'] as Array<string>),
+        artists: (params['artists'] as Array<string>),
+        minArtists: params['minArtists'] as number,
+        maxArtists: params['maxArtists'] as number,
+        writers: (params['writers'] as Array<string>),
+        minWriters: params['minWriters'] as number,
+        maxWriters: params['maxWriters'] as number,
         album: params['album'] as string,
         year: params['year'] as number,
         startYear: params['start'] as number,

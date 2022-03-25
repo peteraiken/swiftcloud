@@ -67,7 +67,7 @@ describe('getSongs', () => {
     test('With artists array filter, only return songs with matching artists', async () => {
         // Arrange
         const filter: SongFilter = {
-            artist: ['Artist B']
+            artists: ['Artist B']
         };
         const parseRowsSpy = jest.spyOn(parserService, 'parseRowsToObject').mockReturnValue(songs);
 
@@ -124,7 +124,7 @@ describe('getSong', () => {
     test('With multiple songs matching filters and sort, just return first in sorted list', async () => {
         // Arrange
         const filter: SongFilter = {
-            artist: ['Artist A']
+            artists: ['Artist A']
         };
         const parseRowsSpy = jest.spyOn(parserService, 'parseRowsToObject').mockReturnValue(songs);
 

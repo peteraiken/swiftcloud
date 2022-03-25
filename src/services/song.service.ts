@@ -132,13 +132,24 @@ export class SongService {
      */
     private applyPredicates(results: Array<Song>, filter?: SongFilter, sort?: (a: Song, b: Song) => number, limit?: number): Array<Song> {
         if (filter) {
+            // General filters.
             if (filter.title) results = results.filter(song => song.title.toLowerCase() === filter.title.toLowerCase());
-            if (filter.artist) results = results.filter(song => song.artists.some(artist => filter.artist.includes(artist)));
-            if (filter.writer) results = results.filter(song => song.writers.some(writer => filter.writer.includes(writer)));
             if (filter.album) results = results.filter(song => song.album.toLowerCase() === filter.album.toLowerCase());
+
+            // Artist and Writer filters.
+            if (filter.artists) results = results.filter(song => song.artists.some(artist => filter.artists.includes(artist)));
+            if (filter.minArtists) results = results.filter(song => song.artists.length >= filter.minArtists);
+            if (filter.maxArtists) results = results.filter(song => song.artists.length <= filter.maxArtists);
+            if (filter.writers) results = results.filter(song => song.writers.some(writer => filter.writers.includes(writer)));
+            if (filter.minWriters) results = results.filter(song => song.writers.length >= filter.minWriters);
+            if (filter.maxWriters) results = results.filter(song => song.writers.length <= filter.maxWriters);
+
+            // Year filters
             if (filter.year) results = results.filter(song => song.year === filter.year);
             if (filter.startYear) results = results.filter(song => song.year >= filter.startYear);
             if (filter.endYear) results = results.filter(song => song.year <= filter.endYear);
+
+            // Play count filters.
             if (filter.minTotalPlays) results = results.filter(song => song.plays.totalPlays >= filter.minTotalPlays);
             if (filter.maxTotalPlays) results = results.filter(song => song.plays.totalPlays <= filter.maxTotalPlays);
         }
