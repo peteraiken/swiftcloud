@@ -47,6 +47,26 @@ The API can be used locally using the following commands:
 `npm run lint` will run linting rules against the codebase.
 `npm run test` will run all unit tests.
 
-#### Desired Improvements
+### Architecture
+This is a basic run-through of the flow of data through the API, from the endpoint, to Google Sheets, and back to the user. For this example, I'll be using the most complex of all the endpoints - `/songs`.
+1. The endpoint `/songs`is exposed via AWS API Gateway, and allows access through to the endpoint on the Lambda.
+2. The request is compared against validation rules defined against the endpoint. For this endpoint, the query strings are checked to make sure they are of the correct data-types (for example `?year` must be an integer, and `?artists` must be a string). These query strings are sanitised and converted as part of the validation process into the data-types they are expected to be - so by the time the data hits the actual endpoint in `app.ts`, `year` has been converted to a number, and `artists`/`writers` has been converted to an array of strings. This means this data conversion functionality is abstracted away from the controller. The validators use the `validation.utility.ts` class file to implement any sanitisation.
+3. On reaching the `/songs` endpoint, the `buildFilters` functions is invoked which builds a `SongFilter` object based on any query string parameters provided. Since these query strings have already been sanitised, this is essentially just manual mapping from query string to appropriate `SongFilter` property. This filter object is then passed directly to the `SongsService.getSongs` function.
+4. As part of the `getSongs` functionality, the actual data must be first be retrieved from the Google Sheets API. The call to first get the rows of data from Google Sheets is implemented in the `GoogleSheetsClient`, which acts as a gateway to the Google Sheets API to which to make requests. After that point, all of the parsing of the row data is abstracted away from this service level into the `parser` file directory, which essentially acts as a repository to convert the data into more useful objects. To achieve this, the `SongService` can call `parserService.parseRowsToObject(rows, Song);`, with this second parameter being a generic type `T` to which to attempt to convert the `rows`. `Song` has been established as a valid conversion type in the `GoogleSheetsParserService`, so the conversion will take place through the `SongBuilder.initialise()`, which is responsible for converting each individual row into a `Song` object. The objects are placed in an array, and returned to the `GoogleSheetsService`. I implemented this abstraction specifically to facilitate any future migration from Google Sheets API to a DB, so that we could handle all DB functionality in here, with the service levels remaining unaffected.
+5. After retrieving and parsing the data, the `getSongs` function will apply any predicates (in this example, just the filter, but in other endpoints, there can be a `sort` and `limit` applied as well). All of these predicate parameters are optional, so if someone just wanted a list of all songs without any filters or sorting, that's exactly what they'll get! Each filter works slightly differently just based on the context of said filter:
+    * `title` and `album` are direct string matches (case-insensitive)
+    * `artists` and `writers` are also string matches, but are case-sensitive due to the complexities of comparing arrays
+    * `year`, `startYear`, `endYear`, `minTotalPlays`, and `maxTotalPlays` are all numeric:
+        * `year` is a direct number match
+        * `startYear` and `minTotalPlays` return results that have greater than or equal matches
+        * `endYear` and `maxTotalPlays` return results that have less than or equal matches
+6. These filtered (and, if applicable, sorted) results are returned to the user in `Array<Song>` format.
+
+The `/summary` endpoints instead return an array of strings in the format `{song name} - {artist1}, {artist2} ({year})`.
+The `/songs/top` endpoints return the full song list but sorted by plays. The base endpoint `/songs/top` sorts the list by total plays across all monthly data; the `/songs/top/month/june,july`, as an example, returns all songs sorted by the total plays across June and July, in descending order.
+
+
+## Desired Improvements
 1. More flexible string-matching in filtering songs - for example, a partial substring check. If providing `artist=Taylor Swift` in the filter, be flexible enough to find songs that have `featuring Taylor Swift` in their artists list, rather than a direct string check.
 2. Related to above, the `artists` and `writers` filters are case-sensitive. Given more time I would have liked to make these case-insensitive.
+3. More generally speaking - more error handling! I implemented controller-level general catches which logs the entire error stack, and returns the error message. 
