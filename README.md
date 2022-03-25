@@ -21,14 +21,14 @@ This endpoint will return a full list of Taylor Swift's songs, along with all th
 #### `/song`
 Subject to all the same filters as above, this endpoint will instead just return a singular song - the first song alphabetically that matches the provided filters.
 
-#### `/songs/year/start/{end}/end/{end}`
+#### `/summary/year/start/{end}/end/{end}`
 Returns a string summary of the songs released between the provided `{start}` year and the provided `{end}` year, inclusively. This functionality is similar to `/songs/startYear={start}&endYear={end}`, but will return in summary format, i.e.:
 `{Song Title} - {Artist1}, {Artist2} ({Year})`
 
-#### `/songs/collabs/artists`
+#### `/summary/collabs/artists`
 Returns a string summary of songs which were performed by two or more artists.
 
-#### `/songs/collabs/writers`
+#### `/summary/collabs/writers`
 Returns a string summary of songs which were written by two or more writers.
 
 #### `/songs/top`
