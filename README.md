@@ -31,6 +31,19 @@ Returns a string summary of songs which were performed by two or more artists.
 #### `/songs/collabs/writers`
 Returns a string summary of songs which were written by two or more writers.
 
+#### `/songs/top`
+Returns full list of songs, sorted by total plays across all available monthly data in descending order.
+
+#### `/songs/top/month/{months}`
+Returns full list of songs, sorted by total plays across just the provided months in descending order. `{months}` should be comma-separated, such as `/month/june,july`.
+
+### Validation
+Each endpoint has validation applied against it using [express-validator.js](https://express-validator.github.io/docs/) - see `song.validator.ts` for an example. These will mainly check for two things among the request parameters / query strings:
+1. If the parameter is required, ensure that it has been provided and is of the expected data-type
+2. If the parameter is optional, ensure that, if it has been provided, it is of the expected data-type
+For example, calling `/songs?year=test`, will throw an error back indicating that `year must be a valid whole number`. However in this endpoint, `year` is optional, so you can still call `/songs` without issue.
+After validating that the parameters are of valid types, the validators will then impose sanitisation on some of the inputs. Namely, it will directly convert any values that are expected to be numeric into `number` data-types, and any values that are expected to be `Array<string>`s into an array of strings separated by comma. This ensures the parameters and query strings are reaching the controller in the correct data-type, and abstracts all conversion functionality away from the controller level.
+
 ## Technical Information
 This API is hosted in AWS Lambda functions, built and deployed using [Serverless](https://www.serverless.com/). The deployment infrastructure-as-code can be viewed in the `serverless.yml` file. The deployment is invoked via [GitHub Actions](https://github.com/peteraiken/swiftcloud/actions), which installs packages, builds the app, runs linting and unit tests, before finally deploying via Serverless to AWS.
 The Lambda functions are abstracted behind an API Gateway, capable of restricting requests to specific paths and methods. I have not implemented restrictions in this way, given the non-sensitive nature of the information at this time. All logging is stored and persisted in AWS CloudWatch.
