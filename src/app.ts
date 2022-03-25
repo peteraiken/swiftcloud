@@ -16,53 +16,89 @@ const sheetsService = new SongService(sheetsClient, parserService);
 
 app.get('/song',
     validateParameters([getSongsByFilterValidator]),
-    async (request, response) => {
-        const filter: SongFilter = buildFilters(request.query)
-        response.send(await sheetsService.getSong(filter));
+    async (request, response, next) => {
+        try { 
+            const filter: SongFilter = buildFilters(request.query);
+            response.send(await sheetsService.getSong(filter));
+        } catch (error) {
+            next(error);
+        }
     }
 );
 
 app.get('/songs', validateParameters([getSongsByFilterValidator]),
-    async (request, response) => {
-        const filter: SongFilter = buildFilters(request.query)
-        response.send(await sheetsService.getSongs(filter));
+    async (request, response, next) => {
+        try {
+            const filter: SongFilter = buildFilters(request.query);
+            response.send(await sheetsService.getSongs(filter));
+        } catch (error) {
+            next(error);
+        }
     }
 );
 
 app.get('/summary/year/start/:start/end/:end',
     validateParameters([summaryByYearRangeValidator]),
-    async (request, response) => {
-        const start = request.params.start as unknown as number;
-        const end = request.params.end as unknown as number;
-        response.send(await sheetsService.getSummaryByDateRange(start, end));
+    async (request, response, next) => {
+        try {
+            const start = request.params.start as unknown as number;
+            const end = request.params.end as unknown as number;
+            response.send(await sheetsService.getSummaryByDateRange(start, end));
+        } catch (error) {
+            next(error);
+        }
     }
 );
 
 app.get('/summary/collabs/artists',
-    async (request, response) => {
-        response.send(await sheetsService.getSummaryByMultipleArtists());
+    async (request, response, next) => {
+        try {
+            response.send(await sheetsService.getSummaryByMultipleArtists());
+        } catch (error) {
+            next(error);
+        }
     }
 );
 
 app.get('/summary/collabs/writers',
-    async (request, response) => {
-        response.send(await sheetsService.getSummaryByMultipleWriters());
+    async (request, response, next) => {
+        try {
+            response.send(await sheetsService.getSummaryByMultipleWriters());
+        } catch (error) {
+            next(error);
+        }
     }
 );
 
 app.get('/songs/top',
-    async (request, response) => {
-        response.send(await sheetsService.getTopSongs());
+    async (request, response, next) => {
+        try {
+            response.send(await sheetsService.getTopSongs());
+        } catch (error) {
+            next(error);
+        }
     }
 );
 
 app.get('/songs/top/months/:months',
     validateParameters([paramMonthValidator]),
-    async (request, response) => {
-        const months = request.params.months as unknown as Array<string>;
-        response.send(await sheetsService.getTopSongs(months));
+    async (request, response, next) => {
+        try {
+            const months = request.params.months as unknown as Array<string>;
+            response.send(await sheetsService.getTopSongs(months));
+        } catch (error) {
+            next(error);
+        }
     }
 );
+
+/**
+ * Handling any API errors.
+ */
+app.use((error, request, response, next) => {
+    console.log(`An error has occurred:`, error);
+    response.status(500).send(`Something has gone wrong. - ${error.message || 'unknown error.'}`);
+})
 
 /**
  * Build valid song filter object from parameters.
