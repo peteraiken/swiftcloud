@@ -6,7 +6,7 @@ This API is designed for Taylor Swift fans to query data about all of Taylor Swi
 A [Postman](https://www.postman.com/) collection is available to import into the Postman client in the `docs/postman-api-collection.json` file, if you prefer.
 
 ## Endpoints
-#### `/songs`
+#### `GET /songs`
 This endpoint will return a full list of Taylor Swift's songs, along with all the data available against each one, in an array. The endpoint is very flexible - the following filters can be appended as query string parameters:
 * `title`
 * `artist` - comma-separated to search for more than one artist
@@ -18,23 +18,23 @@ This endpoint will return a full list of Taylor Swift's songs, along with all th
 * `minTotalPlays` - the minimum total plays the song has received across the available monthly data
 * `maxTotalPlays` - the maximum total plays the song has received across the available monthly data
 
-#### `/song`
+#### `GET /song`
 Subject to all the same filters as above, this endpoint will instead just return a singular song - the first song alphabetically that matches the provided filters.
 
-#### `/summary/year/start/{end}/end/{end}`
+#### `GET /summary/year/start/{end}/end/{end}`
 Returns a string summary of the songs released between the provided `{start}` year and the provided `{end}` year, inclusively. This functionality is similar to `/songs/startYear={start}&endYear={end}`, but will return in summary format, i.e.:
 `{Song Title} - {Artist1}, {Artist2} ({Year})`
 
-#### `/summary/collabs/artists`
+#### `GET /summary/collabs/artists`
 Returns a string summary of songs which were performed by two or more artists.
 
-#### `/summary/collabs/writers`
+#### `GET /summary/collabs/writers`
 Returns a string summary of songs which were written by two or more writers.
 
-#### `/songs/top`
+#### `GET /songs/top`
 Returns full list of songs, sorted by total plays across all available monthly data in descending order.
 
-#### `/songs/top/month/{months}`
+#### `GET /songs/top/month/{months}`
 Returns full list of songs, sorted by total plays across just the provided months in descending order. `{months}` should be comma-separated, such as `/month/june,july`.
 
 ### Validation
